@@ -1,0 +1,38 @@
+import java.util.ArrayList;
+import java.util.List;
+
+public class ProductService{
+
+    List<Product> products = new ArrayList<>();
+    ProductDB db=new ProductDB();
+
+    public void addProduct(Product p){
+
+        db.save(p);
+    }
+
+    public List<Product> getAllProducts(){
+
+       return  db.getAll();
+    }
+
+    public List<Product> getProduct(String name){
+        return db.getproduct(name);
+    }
+
+
+    public List<Product> getProductWithText(String text) {
+          return db.getProductwithtext(text);
+
+    }
+
+    public List<Product> getProductWithPlace(String place){
+    return db.getProductwithplace(place);
+
+    }
+
+    public List<Product> checkWarranty(int wr){
+        return db.checkwarranty(wr);
+
+    }
+}
