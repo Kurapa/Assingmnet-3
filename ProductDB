@@ -1,0 +1,155 @@
+import java.sql.*;
+import java.util.*;
+
+public class ProductDB {
+    Connection con = null;
+
+    public ProductDB() {
+        try {
+            con = DriverManager.getConnection("jdbc:postgresql://localhost:5432/tesk", "postgres", "2005");
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+
+    }
+
+    public void save(Product p) {
+        String query = "insert into product (name,type,place,warranty) values (?,?,?,?)";
+        try {
+            PreparedStatement st = con.prepareStatement(query);
+            st.setString(1, p.getName());
+            st.setString(2, p.getType());
+            st.setString(3, p.getPlace());
+            st.setInt(4, p.getWarranty());
+            st.execute();
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+
+    }
+
+    public List<Product> getAll() {
+        List<Product> products = new ArrayList<>();
+        String query = "select name,type,place,warranty from product";
+        try {
+            PreparedStatement st = con.prepareStatement(query);
+            ResultSet rs = st.executeQuery();
+            while (rs.next()) {
+                Product p = new Product();
+                p.setName(rs.getString(1));
+                p.setType(rs.getString(2));
+                p.setPlace(rs.getString(3));
+                p.setWarranty(rs.getInt(4));
+                products.add(p);
+            }
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+        return products;
+
+    }
+
+    public List<Product> getproduct(String name) {
+    String str = name.toLowerCase();
+    List<Product> products = new ArrayList<>();
+    String query = "select name,type,place,warranty from product ";
+        try{
+        PreparedStatement st = con.prepareStatement(query);
+        ResultSet rs = st.executeQuery();
+        while (rs.next()) {
+            Product p = new Product();
+
+            p.setName(rs.getString(1));
+            p.setType(rs.getString(2));
+            p.setPlace(rs.getString(3));
+            p.setWarranty(rs.getInt(4));
+            boolean result = p.getName().equals(name);
+            if (result) {
+                products.add(p);}
+        }
+    } catch(SQLException e)
+
+    {
+        throw new RuntimeException(e);
+    }
+    return products;
+}
+    public List<Product> getProductwithtext(String text){
+        String str = text.toLowerCase();
+        List<Product> products = new ArrayList<>();
+        String query = "select name,type,place,warranty from product ";
+        try{
+            PreparedStatement st = con.prepareStatement(query);
+            ResultSet rs = st.executeQuery();
+            while (rs.next()) {
+                Product p = new Product();
+
+                p.setName(rs.getString(1));
+                p.setType(rs.getString(2));
+                p.setPlace(rs.getString(3));
+                p.setWarranty(rs.getInt(4));
+                boolean result = p.getName().toLowerCase().contains(text)||p.getPlace().toLowerCase().contains(text)||p.getType().toLowerCase().contains(text);
+                if (result) {
+                    products.add(p);}
+            }
+        } catch(SQLException e)
+
+        {
+            throw new RuntimeException(e);
+        }
+        return products;
+
+    }
+    public List<Product> getProductwithplace(String place){
+        String str=place.toLowerCase();List<Product> products = new ArrayList<>();
+        String query = "select name,type,place,warranty from product ";
+        try{
+            PreparedStatement st = con.prepareStatement(query);
+            ResultSet rs = st.executeQuery();
+            while (rs.next()) {
+                Product p = new Product();
+
+                p.setName(rs.getString(1));
+                p.setType(rs.getString(2));
+                p.setPlace(rs.getString(3));
+                p.setWarranty(rs.getInt(4));
+                boolean result = p.getPlace().toLowerCase().contains(place);
+                if (result) {
+                    products.add(p);}
+            }
+        } catch(SQLException e)
+
+        {
+            throw new RuntimeException(e);
+        }
+        return products;
+    }
+   public List<Product> checkwarranty(int year){
+       List<Product> products = new ArrayList<>();
+       String query = "select name,type,place,warranty from product ";
+       try{
+           PreparedStatement st = con.prepareStatement(query);
+           ResultSet rs = st.executeQuery();
+           while (rs.next()) {
+               Product p = new Product();
+
+               p.setName(rs.getString(1));
+               p.setType(rs.getString(2));
+               p.setPlace(rs.getString(3));
+               p.setWarranty(rs.getInt(4));
+               boolean result = p.getWarranty()>=year;
+               if (result) {
+                   products.add(p);}
+           }
+       } catch(SQLException e)
+
+       {
+           throw new RuntimeException(e);
+       }
+       return products;
+
+   }
+
+
+
+}
